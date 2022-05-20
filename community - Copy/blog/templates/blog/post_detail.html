@@ -1,0 +1,54 @@
+{% extends "blog/base.html" %} {% block content %}
+<article class="media content-section">
+    <img class="rounded-circle article-img" src="{{ object.author.profile.image.url }}">
+    <div class="media-body">
+        <div class="article-metadata">
+            {% comment %} <a class="mr-2" href="#">{{ object.author }}</a> {% endcomment %}
+            <a class="mr-2" href="{% url 'user-posts' object.author.username %}">{{ object.author }}</a>
+            <small class="text-muted">{{ object.date_posted}}</small> 
+            {% if object.author == user %}
+            <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+        <h2 class=" text-wrap wrapword article-title">{{ object.title }}</h2>
+        <p class=" text-wrap wrapword article-content">{{ object.content }}</p>
+        {% if user.is_authenticated %}
+            {% comment %} <button type="submit" class="btn btn-outline-info"> Like ({{ object.like }}) </button>
+            <button type="submit" class="btn btn-outline-info"> Dislike ({{ object.dlike }})</button> {% endcomment %}
+        {% else %}
+            <div class="media-body">
+                {% comment %} <a href="{% url 'register' %}"><button type="submit" class="btn btn-outline-info"> Like ({{ object.like }}) </button></a>
+                <a href="{% url 'register' %}"><button type="submit" class="btn btn-outline-info"> Dislike ({{ object.dlike }})</button></a> {% endcomment %}
+                <a href="{% url 'register' %}"><button type="submit" class="btn btn-outline-info"> Comment </button></a>
+            </div>
+        {% endif %}
+</div>
+</article>
+{% if comment.all %}
+<article class="media content-section">
+    <div class="media-body">
+        <h4 class="wrapword article-title">Comments</h4>
+        <div class="dropdown-divider"></div>
+        {% for c in comment.all %}
+        <h6 class="wrapword article-content"><b><medium>{{c.name}}</medium></b>: {{ c.body }} <small style="float:right">| {{ c.created_on }}</small></h6>
+        {% endfor %}
+    </div>
+</article>
+{% endif %}
+{% if user.is_authenticated %}
+    <article class="media content-section">
+    <div class="media-body">
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name"> Name</label> {{form.name}}<br>
+        <label for="comments"> Comment</label> {{form.body}}<br>
+        <!-- <div class="col-sm-12 form-group"> -->
+        <button type="submit" class="btn btn-outline-info">Comment </button>
+    </form>
+    </div>
+    </article>
+{% endif %}
+{% endblock content %}

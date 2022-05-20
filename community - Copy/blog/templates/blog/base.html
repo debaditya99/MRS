@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+  <style>
+
+    body {
+      background-image:url('{% static "blog/back.png" %}');
+      background-size: 100% 100%;
+      background-attachment:fixed;
+      background-repeat: no-repeat;
+      margin-top: 5rem;
+      
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: #444444;
+    }
+
+    ul {
+      margin: 0;
+    }
+
+    .bg-steel {
+      background-color: #5f788a;
+    }
+
+    .site-header .navbar-nav .nav-link {
+      color: #cbd5db;
+    }
+
+    .site-header .navbar-nav .nav-link:hover {
+      color: #ffffff;
+    }
+
+    .site-header .navbar-nav .nav-link.active {
+      font-weight: 500;
+    }
+
+    .content-section {
+      background: #ffffff;
+      padding: 10px 20px;
+      border: 1px solid #dddddd;
+      border-radius: 3px;
+      margin-bottom: 20px;
+    }
+
+    .article-title {
+      color: #444444;
+    }
+
+    a.article-title:hover {
+      color: #428bca;
+      text-decoration: none;
+    }
+
+    .article-content {
+      white-space: pre-line;
+    }
+
+    .article-img {
+      height: 65px;
+      width: 65px;
+      margin-right: 16px;
+    }
+
+    .article-metadata {
+      padding-bottom: 1px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid #e3e3e3
+    }
+
+    .article-metadata a:hover {
+      color: #333;
+      text-decoration: none;
+    }
+
+    .article-svg {
+      width: 25px;
+      height: 25px;
+      vertical-align: middle;
+    }
+
+    .account-img {
+      height: 125px;
+      width: 125px;
+      margin-right: 20px;
+      margin-bottom: 16px;
+    }
+
+    .account-heading {
+      font-size: 2.5rem;
+    }
+
+    .column {
+      float: left;
+      width: 33.33%;
+      padding: 5px;
+    }
+    
+    /* Clear floats after image containers */
+    .row::after {
+      content: "";
+      clear: both;
+      display: table;
+    }
+    
+    #logo{
+      transition: font 0.3s ease 0s;
+    }
+
+    #logo:hover {
+      width: 5.5%;
+    }
+
+    .wrapword {
+      
+      {% comment %} -ms-word-break: break-all; {% endcomment %}
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+  </style>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {%if title%}
+  <title>{{title}}</title>
+  {%else%}
+  <title>Home Page</title>
+  {%endif%}
+</head>
+
+<body>
+  
+  <nav  style="height:9.5% ;backdrop-filter:blur(5px); background-color: rgb(0,0,0,0.83); " class="navbar navbar-expand-lg fixed-top static-top">
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      
+      <button type="button" class="btn " style="width: 6%;"> <a href="{% url 'blog-home' %}"><img id="logo" src="/media/logo3.png" alt="image"  style="width: 100%;"> </button></a>
+
+      <a href="{% url 'blog-about' %}" > <button id="flrt" type="button" class="btn btn-outline-info">ABOUT</button> </a>
+      &nbsp;
+      <a href="{% url 'blog-contact' %}" > <button id="flrt" type="button" class="btn btn-outline-info">CONTACT
+          US</button> </a>
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+
+        </li>
+      </ul>
+
+        <button class="btn btn-outline-success btn-lg rounded-pill font-weight-bolder my-2 my-sm-0" type="submit"> &nbsp; MOVIE RECOMMENDATIONS &nbsp; </button>
+
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+
+        </li>
+      </ul>
+
+
+      {% if user.is_authenticated %}
+      <a href="{% url 'post-create' %}"> <button id="flrt" type="button" class="btn btn-outline-success">ADD POST</button> </a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="{% url 'profile' %}"> <button id="flrt" type="button" class="btn btn-outline-danger">PROFILE</button> </a> &nbsp;
+      <a href="{% url 'logout' %}"> <button id="flrt" type="button" class="btn btn-outline-warning">LOGOUT</button> </a>
+      {% else %}
+      <a href="{% url 'login' %}"> <button id="flrt" type="button" class="btn btn-outline-warning">LOGIN</button> </a> &nbsp;
+      <a href="{% url 'register' %}"> <button id="flrt" type="button" class="btn btn-outline-warning">SIGNUP </button> </a>
+      {% endif %}
+    </div>
+  </nav>
+
+
+  <main role="main" class="container">
+    <div class="row">
+      <div class="col-md-9">
+        {%if messages%}
+        {%for message in messages%}
+        <div style="background-color:white  ;color:black" class="alert alert-{{ messages.tags}}">
+          {{message}}
+        </div>
+        {%endfor%}
+        {%endif%}
+        {% block content %}{% endblock %}
+      </div>
+
+      <div class="col-md-3"  style="color: white;">
+        <div class="content-section" style="background-color: rgb(0,0,0,0.5);backdrop-filter:blur(5px); "> 
+          <h3 style="color: white;">Quick Actions</h3>
+          <p >Support us by sharing our work to others.
+          <ul class="list-group">
+            <a href="https://www.imdb.com/news/movie/?ref_=nv_nw_mv" style="text-decoration: none;" target="blank">
+              <li class="list-group-item list-group-item-light">Viral Posts</li>
+            </a>
+            <a href="https://timesofindia.indiatimes.com/entertainment/movie-reviews" style="text-decoration: none;"
+              target="blank">
+              <li class="list-group-item list-group-item-light">Announcements</li>
+            </a>
+            <a href="https://www.rottentomatoes.com/browse/upcoming" style="text-decoration: none;" target="blank">
+              <li class="list-group-item list-group-item-light">Movies</li>
+            </a>
+            <br>
+          </ul>
+          </p>
+
+          <div>
+        <h3  style="color: white;"><br> Feedback </h3>   
+         <form role="form" method="post">
+              <label for="email">
+                Email</label><br>
+              <input type="email" class="form-control" width="" placeholder="Enter Email" id="email" name="email"
+                required>
+                <br>
+
+              <label for="comments">
+                Feedback</label><br>
+              <textarea class="form-control" type="textarea" name="comments" id="comments" placeholder="Your Comments"
+                maxlength="1000" rows="7"></textarea>
+<br>
+              <div class="col-sm-12 form-group">
+                <button type="submit" class="btn btn-lg btn-warning btn-block">Submit </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
